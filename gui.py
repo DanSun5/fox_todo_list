@@ -17,6 +17,7 @@ window = sg.Window("My To-do project",
 while True:
     event, values = window.read()
     print(1, event)
+    print("Hello, DanSun!")
     print(2, values)
     print(3, values['todos'])
     match event:

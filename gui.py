@@ -1,5 +1,5 @@
-import functions
 import PySimpleGUI as sg
+import functions
 
 lable = sg.Text("Type in a to-do")
 input_box = sg.InputText(tooltip="Enter todo", key="todo")
@@ -17,7 +17,6 @@ window = sg.Window("My To-do project",
 while True:
     event, values = window.read()
     print(1, event)
-    print("Hello, DanSun!")
     print(2, values)
     print(3, values['todos'])
     match event:
@@ -39,7 +38,7 @@ while True:
                 functions.write_todos(todos)
                 window['todos'].update(values=todos)
             except ImportError:
-                sg.popup("Please select an item first.")
+                print("Please select an item first.")
 
         case 'Complete':
             todo_to_complete = values['todos'][0]

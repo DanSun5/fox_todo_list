@@ -1,6 +1,10 @@
 import PySimpleGUI as sg
 import functions
+import time
 
+sg.theme('LightBrown6')
+
+clock = sg.Text('', key='clock')
 lable = sg.Text("Type in a to-do")
 input_box = sg.InputText(tooltip="Enter todo", key="todo")
 add_b = sg.Button('Add')
@@ -11,14 +15,12 @@ compile_b = sg.Button('Complete')
 exit_b = sg.Button('Exit')
 
 window = sg.Window("My To-do project",
-                   layout=[[lable],
+                   layout=[[clock], [lable],
                            [input_box, add_b], [list_box, edit_b, compile_b],
                            [exit_b]], font=('Helvetica', 20))
 while True:
-    event, values = window.read()
-    print(1, event)
-    print(2, values)
-    print(3, values['todos'])
+    event, values = window.read(timeout=100)
+    window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
     match event:
         case "Add":
             todos = functions.get_todos()
@@ -37,16 +39,21 @@ while True:
                 todos[index] = new_todo
                 functions.write_todos(todos)
                 window['todos'].update(values=todos)
-            except ImportError:
-                print("Please select an item first.")
+            except IndexError:
+                sg.popup("Please select an item first.",
+                         font=('Helvetica', 20))
 
         case 'Complete':
-            todo_to_complete = values['todos'][0]
-            todos = functions.get_todos()
-            todos.remove(todo_to_complete)
-            functions.write_todos(todos)
-            window['todos'].update(values=todos)
-            window['todo'].update(value='')
+            try:
+                todo_to_complete = values['todos'][0]
+                todos = functions.get_todos()
+                todos.remove(todo_to_complete)
+                functions.write_todos(todos)
+                window['todos'].update(values=todos)
+                window['todo'].update(value='')
+            except IndexError:
+                sg.popup("Please select an item first.",
+                         font=('Helvetica', 20))
 
         case 'Exit':
             break
